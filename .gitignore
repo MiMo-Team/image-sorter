@@ -1,0 +1,32 @@
+##############################
+## Folders                  ##
+##############################
+.idea/
+node_modules/
+/static/
+/dist/
+/lib/
+/images_test_library/
+
+##############################
+## files                  ##
+##############################
+
+yarn.lock
+pnpm-lock.yaml
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+/.vscode/
+/.settings/
+/.project
