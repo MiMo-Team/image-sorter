@@ -9,6 +9,10 @@ node_modules/
 /images_test_library/
 /images_input/
 /images_output/
+/agent_work/file_input/
+/agent_work/file_output/
+/script_work/images_input/
+/script_work/images_output/
 
 ##############################
 ## files                  ##
