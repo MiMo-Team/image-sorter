@@ -117,7 +117,7 @@ def placeholder(dst, size, text):
     d = ImageDraw.Draw(img)
     f = ImageFont.load_default(size=max(16, size // 18))
     d.text((size // 12, size // 2), text, fill=(90, 90, 90), font=f)
-    img.save(dst)
+    img.save(dst, 'JPEG')
 
 
 def make_thumb(src, size):
@@ -127,7 +127,7 @@ def make_thumb(src, size):
     if os.path.exists(dst):
         return dst
     os.makedirs(os.path.dirname(dst), exist_ok=True)
-    tmp = dst + '.tmp'
+    tmp = dst + '.tmp.jpg'
     if ext in VIDEO_EXTS:
         ok = ql_thumb(src, tmp, size)
         if not ok:
@@ -248,7 +248,7 @@ def cmd_main(args):
     json.dump(sheets, open(manifest, 'w'), ensure_ascii=False)
     print('main: wrote %d sheets -> %s' % (len(sheets), SHEET_DIR))
     print('main: manifest -> %s' % manifest)
-    if args.show:
+    if getattr(args, 'show', False):
         _show_manifest(sheets)
 
 
