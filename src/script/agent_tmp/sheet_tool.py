@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 sheet_tool.py — 媒体拼接表生成 + 分类落盘编译 工具集
+（实现 src/skills/classifier.md 这一「图片分类 Skill」的一级分类视觉辅助 + 编译环节）
+
+分类规则见 src/skills/classifier.md（一级取值：高梓皓 / 高仓雄 / 朱莉莉 / 泡芙 / 其他）。
 
 把原先散落在 /tmp 的 make_sheets.py / subset_sheets.py 整合为一个可复用、可版本化的工具。
 特性：
