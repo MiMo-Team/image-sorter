@@ -8,7 +8,7 @@
  * 作者：gaocangxiong
  *
  * 用法：
- *   node sorter/sort-by-category.js [映射文件] [--dry]
+ *   node src/script/sort-by-category.js [映射文件] [--dry]
  *
  *   映射文件  默认：agent_work/classification.tsv
  *             格式：TSV，每行 `文件名<TAB>一级分类`，# 开头为注释，首行可为表头。
@@ -37,8 +37,18 @@ var utils = require('./utils');
 
 var ALLOWED = ['高梓皓', '高仓雄', '朱莉莉', '泡芙', '其他'];
 
-// 基于脚本所在目录 sorter/ 解析输入/输出（指向同级的 agent_work/）
-var baseDir = path.resolve(__dirname, '..');
+// 解析项目根目录：从脚本所在目录向上查找包含 agent_work / template 的目录
+function findProjectRoot(start) {
+  var dir = start;
+  while (true) {
+    if (fs.existsSync(path.join(dir, 'agent_work')) || fs.existsSync(path.join(dir, 'template'))) return dir;
+    var parent = path.resolve(dir, '..');
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return start;
+}
+var baseDir = findProjectRoot(__dirname);
 var inputPath = path.join(baseDir, 'agent_work', 'file_input');
 var outputPath = path.join(baseDir, 'agent_work', 'file_output');
 var fixArrange = path.join(__dirname, 'fix-arrange.command');

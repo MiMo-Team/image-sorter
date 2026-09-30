@@ -1,0 +1,6 @@
+# 工具生成的产物（非版本化）
+sheets/
+verify/
+.cache/
+manifest_*.json
+*.png

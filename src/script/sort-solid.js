@@ -115,9 +115,20 @@ var path = require('path');
 const shell = require('shelljs');
 const utils = require('./utils');
 
-// 基于脚本所在目录 sorter/，指向同级的 script_work/ 下的输入/输出目录
-var inputPath = path.resolve(__dirname, '../script_work/images_input');
-var outputPath = path.resolve(__dirname, '../script_work/images_output');
+// 基于项目根目录，指向根下 script_work/ 的输入/输出目录
+function findProjectRoot(start) {
+  var dir = start;
+  while (true) {
+    if (fs.existsSync(path.join(dir, 'agent_work')) || fs.existsSync(path.join(dir, 'template'))) return dir;
+    var parent = path.resolve(dir, '..');
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return start;
+}
+var projectRoot = findProjectRoot(__dirname);
+var inputPath = path.join(projectRoot, 'script_work', 'images_input');
+var outputPath = path.join(projectRoot, 'script_work', 'images_output');
 var sortedPath = path.join(outputPath, 'sorted');
 var tmpOtherPath = path.join(outputPath, '_tmp_other');
 

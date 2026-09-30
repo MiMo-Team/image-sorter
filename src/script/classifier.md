@@ -15,8 +15,8 @@
 - **输入**：`agent_work/file_input`（可含任意层级子目录）。
 - **输出**：`agent_work/file_output`，其下按「人物 / 对象」再按「日期」归档。
 - **可自动化部分**：
-  - 按日期二级分类（复用 `sorter/sort-flatten.js`）；
-  - 生成后的一键排列处理（复用 `sorter/fix-arrange.command`）。
+  - 按日期二级分类（复用 `src/script/sort-flatten.js`）；
+  - 生成后的一键排列处理（复用 `src/script/fix-arrange.command`）。
 - **需人工 / 视觉辅助部分**：判断图片里出现的人物 / 对象，决定归属哪个一级文件夹。
 - **整体流程**：`准备输入 → ① 一级分类 → ② 二级日期分类 → ③ 排列处理（自动）→ ④ 校验输出`。
 
@@ -60,7 +60,7 @@
 - `2025.06.10/` → 放入 `2025_06_10_21_15_22_IMG_5630.MOV`
 - `2025.06.11/` → 放入 `2025_06_11_17_18_23_IMG_5635.JPG`
 
-> 该项目已提供 `sorter/sort-flatten.js`，可递归遍历并按上述日期规则拍平归类，
+> 该项目已提供 `src/script/sort-flatten.js`，可递归遍历并按上述日期规则拍平归类，
 > 可直接复用其日期解析逻辑（`utils.findIndex(filename, '_', 2)` 取第三个下划线位置）。
 
 ---
@@ -69,14 +69,14 @@
 
 > 本步骤由分类流水线在生成 `file_output` 后**自动执行**，无需事后手动操作。
 > 即：完成「一级分类 + 二级日期分类」、把文件写入 `file_output` 之后，
-> 流水线下一步自动调用 `sorter/fix-arrange.command` 处理排列，然后再进入「第五步 校验」。
+> 流水线下一步自动调用 `src/script/fix-arrange.command` 处理排列，然后再进入「第五步 校验」。
 
 macOS 下新文件夹默认不会「按名称排列」，需逐个设置；本步骤一次性自动完成：
 
 - **作用**：把排列基准文件 `template/arrange_name.DS_Store` 复制到输出目录树的每个文件夹中，
   使所有生成目录（仅 `file_output` 下）自动采用「按名称」排列，**不影响系统其它文件夹**。
 - **自动触发**：分类 / 生成脚本在写入 `file_output` 完成后，执行
-  `bash sorter/fix-arrange.command`（默认处理 `agent_work/file_output`）即可，无需人工介入。
+  `bash src/script/fix-arrange.command`（默认处理 `agent_work/file_output`）即可，无需人工介入。
 - **手动重跑（可选）**：若需对其它目录或单独刷新，可双击该脚本，或把文件夹拖到其图标上。
 - **原理 / 说明**：Finder 会拒绝手写或非法的 `.DS_Store`、且 AppleScript 设排列方式不落盘；
   因此采用「复制 Finder 自身生成的合法 `.DS_Store` 基准」的方式，可靠生效。
@@ -123,7 +123,7 @@ file_output/
 2. **一级分类**：逐张判断图中对象，按「第二节规则」归入 `高梓皓` / `高仓雄` / `朱莉莉` / `泡芙` / `其他`。
    - 关键规则：同时含「成年男性」+「成年女性」 → `朱莉莉`；出现宠物猫「泡芙」 → `泡芙`。
 3. **二级分类**：在每个一级文件夹内，按文件名 `YYYY_MM_DD_...` 解析出日期，建 `YYYY.MM.DD` 子目录并移入。
-4. **排列处理（自动）**：分类脚本在生成 `file_output` 后自动执行 `sorter/fix-arrange.command`，使所有生成目录按「名称」排列；无需事后手动操作（详见第四节）。
+4. **排列处理（自动）**：分类脚本在生成 `file_output` 后自动执行 `src/script/fix-arrange.command`，使所有生成目录按「名称」排列；无需事后手动操作（详见第四节）。
 5. **校验**：确认整体为 `file_output / 五个一级文件夹 / 日期文件夹 / 文件` 的四层结构。
 6. **输出**：结果落在 `agent_work/file_output`，可直接使用。
 

@@ -6,10 +6,10 @@
  * 作者（@author）：<请填写，例如 gaocangxiong>
  *
  * 用法（Usage）：
- *   1. 输入目录为 sorter/ 同级的 script_work/images_input，
+ *   1. 输入目录为项目根目录下的 script_work/images_input，
  *      把待整理的图片/文件放进去，可以包含任意层级的子目录（脚本会递归遍历）。
- *   2. 运行：node sorter/sort-flatten.js
- *      （路径基于脚本自身所在目录 sorter/ 解析，与工作目录无关，任意位置运行均可）
+ *   2. 运行：node src/script/sort-flatten.js
+ *      （路径基于项目根目录解析，与工作目录无关，任意位置运行均可）
  *   3. 运行结束后查看 script_work/images_output 目录。
  *
  * 输入（Input）：
@@ -20,7 +20,7 @@
  *     │   └─ 2025_06_20_09_17_40.ppt
  *     └─ sub2/deep/2025_01_01_00_00_00.jpg
  *   注意：输入/输出路径通过 path.resolve(__dirname, '../script_work/...') 解析，
- *         即 sorter/ 目录的同级目录 script_work/ 下的 images_input / images_output。
+ *         即项目根目录下的 script_work/ 下的 images_input / images_output。
  *
  * 输出（Output）：
  *   script_work/images_output/        —— 每次运行都会先删除再重建（shell.rm -rf）
@@ -51,11 +51,22 @@ var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
 var utils = require('./utils');
-// 解析需要遍历的输入/输出文件夹（基于脚本所在目录 sorter/，指向同级 script_work/）
-var inputPath = path.resolve(__dirname, '../script_work/images_input');
-var outputPath = path.resolve(__dirname, '../script_work/images_output');
-var outputSortedPath = path.resolve(__dirname, '../script_work/images_output/sorted');
-var outputMixedPath = path.resolve(__dirname, '../script_work/images_output/mixed');
+// 解析需要遍历的输入/输出文件夹（基于项目根目录，指向根下的 script_work/）
+function findProjectRoot(start) {
+  var dir = start;
+  while (true) {
+    if (fs.existsSync(path.join(dir, 'agent_work')) || fs.existsSync(path.join(dir, 'template'))) return dir;
+    var parent = path.resolve(dir, '..');
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return start;
+}
+var projectRoot = findProjectRoot(__dirname);
+var inputPath = path.join(projectRoot, 'script_work', 'images_input');
+var outputPath = path.join(projectRoot, 'script_work', 'images_output');
+var outputSortedPath = path.join(projectRoot, 'script_work', 'images_output', 'sorted');
+var outputMixedPath = path.join(projectRoot, 'script_work', 'images_output', 'mixed');
 
 // 每次运行前清空并重建输出目录，保证结果是“从输入重新生成”的
 shell.rm('-rf', outputPath);
